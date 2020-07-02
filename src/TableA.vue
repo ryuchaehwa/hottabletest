@@ -1,19 +1,18 @@
 <template>
   <div>
     <h1>Table A</h1>
-    <hot-table :data="getData" :colHeaders="colHeaders" :columns="columns" :columnSorting="columnSorting" />
-    <hr />
+    <hot-table ref="hottable" :data="data" :colHeaders="colHeaders" :columns="columns" :columnSorting="columnSorting" :beforeInit="beforeInit" :beforeRender="beforeRender" />
     <h1>table tag</h1>
     <table>
-        <tr v-for="data in getData" :key="data.id">
-            <td> {{data.a}} </td>
-            <td> {{data.b}} </td>
-            <td> {{data.c}} </td>
-        </tr>
+      <tr v-for="data in data" :key="data.id">
+        <td>{{ data.a }}</td>
+        <td>{{ data.b }}</td>
+        <td>{{ data.c }}</td>
+      </tr>
     </table>
-    <hr>
+
+    <hr />
     <table-b></table-b>
-    
   </div>
 </template>
 
@@ -38,17 +37,45 @@ export default {
         sortEmptyCells: true,
         initialConfig: {
           column: 0,
-        //   sortOrder: "asc",
-          sortOrder: "desc",
+            sortOrder: "asc",
+        //   sortOrder: "desc",
         },
       },
+
+      data: []
     };
   },
-  computed: {
-    getData() {
-      return this.$store.getters.getData;
-    },
+
+//   computed: {
+//     getData() {
+//       return this.$store.getters.getData;
+//     },
+//   },
+  mounted() {
+    console.log("mounted");
+    let hotTableEl = this.$refs.hottable.hotInstance;
+    hotTableEl.loadData(this.$store.getters.getData)
+    // console.log(hotTableEl);
+
+    this.data = this.$store.getters.getData
+
+    // let newData = {
+    //     a: "whatever"
+    // }
+
+    // this.$store.commit('updateData', newData)
   },
+
+  methods: {
+      beforeInit() {
+          console.log('before init')
+      },
+
+      beforeRender() {
+          console.log('before render')
+
+      },
+  }
 };
 </script>
 
